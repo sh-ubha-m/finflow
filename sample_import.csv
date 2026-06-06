@@ -1,0 +1,7 @@
+ID,Title,Amount,Date,Category,Type,Description
+"import_1","Weekly Grocery Run",145.82,"2026-06-03","Food & Dining","expense","Fresh vegetables, dairy, and meat"
+"import_2","Netflix subscription",15.49,"2026-06-02","Entertainment & Leisure","expense","Standard HD monthly plan"
+"import_3","Gas Station Fuel",45.00,"2026-06-01","Transportation","expense","Regular fuel fill up"
+"import_4","Freelance Logo Design",400.00,"2026-06-04","Freelance & Side Hustle","income","Designed branding package for client"
+"import_5","Water utility bill",35.20,"2026-05-28","Utilities & Bills","expense","Bi-monthly water usage"
+"import_6","Birthday Gift",50.00,"2026-06-05","Gifts","income","Gift card from family"
