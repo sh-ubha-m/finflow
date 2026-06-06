@@ -6,12 +6,14 @@ interface TransactionListProps {
   transactions: Transaction[];
   onEdit: (transaction: Transaction) => void;
   onDelete: (id: string) => void;
+  currencySymbol: string;
 }
 
 export const TransactionList: React.FC<TransactionListProps> = ({
   transactions,
   onEdit,
   onDelete,
+  currencySymbol,
 }) => {
   // --- UI STATES FOR SEARCH, FILTER, AND SORT ---
   const [searchQuery, setSearchQuery] = useState('');
@@ -238,7 +240,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                     className={tx.type === 'income' ? 'text-income' : 'text-expense'}
                     style={{ textAlign: 'right', fontWeight: 600, fontFamily: 'var(--font-heading)', fontSize: '0.95rem' }}
                   >
-                    {tx.type === 'income' ? '+' : '-'}${tx.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {tx.type === 'income' ? '+' : '-'}{currencySymbol}{tx.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                   <td style={{ textAlign: 'right' }}>
                     <div style={{ display: 'flex', gap: '0.375rem', justifyContent: 'flex-end' }}>

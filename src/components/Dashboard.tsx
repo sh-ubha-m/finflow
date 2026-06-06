@@ -4,6 +4,7 @@ import type { Transaction } from '../types';
 
 interface DashboardProps {
   transactions: Transaction[];
+  currencySymbol: string;
 }
 
 // --- GLOBAL STATIC CONFIGURATION ---
@@ -21,7 +22,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Other Expense': '#6b7280', // Gray
 };
 
-export const Dashboard: React.FC<DashboardProps> = ({ transactions }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ transactions, currencySymbol }) => {
   
   // --- 1. CALCULATE GENERAL KPIs ---
   // useMemo caches these calculations so they only rerun when "transactions" array changes.
@@ -155,7 +156,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions }) => {
         <div className="card summary-card">
           <span className="summary-label">Total Balance</span>
           <span className="summary-value" style={{ color: kpis.totalBalance >= 0 ? 'var(--text-primary)' : 'var(--danger)' }}>
-            {kpis.totalBalance < 0 ? '-' : ''}${Math.abs(kpis.totalBalance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {kpis.totalBalance < 0 ? '-' : ''}{currencySymbol}{Math.abs(kpis.totalBalance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
           <span className="summary-subtext">Net wealth available</span>
         </div>
@@ -163,7 +164,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions }) => {
         <div className="card summary-card income">
           <span className="summary-label">Total Income</span>
           <span className="summary-value text-income">
-            +${kpis.totalIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            +{currencySymbol}{kpis.totalIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
           <span className="summary-subtext positive">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
@@ -174,7 +175,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions }) => {
         <div className="card summary-card expense">
           <span className="summary-label">Total Expenses</span>
           <span className="summary-value text-expense">
-            -${kpis.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            -{currencySymbol}{kpis.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
           <span className="summary-subtext negative">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 19V5M5 12l7 7 7-7"/></svg>
@@ -198,7 +199,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions }) => {
         <div className="card chart-card">
           <div className="chart-title-container">
             <h3 className="chart-title">Expense Breakdown</h3>
-            <span className="badge badge-neutral">${expenseBreakdown.totalExpense.toLocaleString()} Total</span>
+            <span className="badge badge-neutral">{currencySymbol}{expenseBreakdown.totalExpense.toLocaleString()} Total</span>
           </div>
 
           <div className="breakdown-list" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginTop: '1rem', width: '100%' }}>
@@ -216,7 +217,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions }) => {
                       <span>{item.category}</span>
                     </div>
                     <div>
-                      <span>${item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                      <span>{currencySymbol}{item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                       <span style={{ color: 'var(--text-secondary)', marginLeft: '0.5rem', fontWeight: 500 }}>({item.percent}%)</span>
                     </div>
                   </div>
@@ -308,7 +309,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions }) => {
                         borderRadius: '3px 3px 0 0',
                         transition: 'height 0.4s ease-out'
                       }}
-                      title={`Income: $${data.income.toLocaleString()}`}
+                      title={`Income: ${currencySymbol}${data.income.toLocaleString()}`}
                     />
                     {/* Expense Bar */}
                     <div 
@@ -320,7 +321,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ transactions }) => {
                         borderRadius: '3px 3px 0 0',
                         transition: 'height 0.4s ease-out'
                       }}
-                      title={`Expenses: $${data.expense.toLocaleString()}`}
+                      title={`Expenses: ${currencySymbol}${data.expense.toLocaleString()}`}
                     />
                   </div>
 

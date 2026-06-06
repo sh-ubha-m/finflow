@@ -7,6 +7,7 @@ interface BudgetPlannerProps {
   budgets: Budget[];
   onSaveBudget: (budget: Budget) => void;
   onDeleteBudget: (category: ExpenseCategory) => void;
+  currencySymbol: string;
 }
 
 export const BudgetPlanner: React.FC<BudgetPlannerProps> = ({
@@ -14,6 +15,7 @@ export const BudgetPlanner: React.FC<BudgetPlannerProps> = ({
   budgets,
   onSaveBudget,
   onDeleteBudget,
+  currencySymbol,
 }) => {
   const [editingCategory, setEditingCategory] = useState<ExpenseCategory | null>(null);
   const [budgetLimitInput, setBudgetLimitInput] = useState('');
@@ -115,7 +117,7 @@ export const BudgetPlanner: React.FC<BudgetPlannerProps> = ({
           <div>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Total Budget Set:</span>
             <div style={{ fontSize: '1.75rem', fontWeight: 700, fontFamily: 'var(--font-heading)' }}>
-              ${totals.totalBudgets.toLocaleString()}
+              {currencySymbol}{totals.totalBudgets.toLocaleString()}
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
@@ -127,7 +129,7 @@ export const BudgetPlanner: React.FC<BudgetPlannerProps> = ({
                 color: totals.rawPercentage >= 100 ? 'var(--danger)' : totals.rawPercentage >= 80 ? 'var(--warning)' : 'var(--text-primary)' 
               }}
             >
-              ${totals.totalSpentInBudgetedCategories.toLocaleString()} ({totals.rawPercentage.toFixed(0)}%)
+              {currencySymbol}{totals.totalSpentInBudgetedCategories.toLocaleString()} ({totals.rawPercentage.toFixed(0)}%)
             </div>
           </div>
         </div>
@@ -177,14 +179,14 @@ export const BudgetPlanner: React.FC<BudgetPlannerProps> = ({
                     <span style={{ fontSize: '0.95rem', fontWeight: 600 }}>{cat}</span>
                     {hasBudget && (
                       <span style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-secondary)' }}>
-                        ${limit.toLocaleString()}
+                        {currencySymbol}{limit.toLocaleString()}
                       </span>
                     )}
                   </div>
 
                   <div style={{ margin: '0.75rem 0' }}>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
-                      Spend this month: <b>${spent.toLocaleString(undefined, { minimumFractionDigits: 2 })}</b>
+                      Spend this month: <b>{currencySymbol}{spent.toLocaleString(undefined, { minimumFractionDigits: 2 })}</b>
                     </div>
 
                     {hasBudget && (
@@ -205,7 +207,7 @@ export const BudgetPlanner: React.FC<BudgetPlannerProps> = ({
                     <div style={{ minHeight: '1.25rem', fontSize: '0.75rem' }}>
                       {isOverBudget && (
                         <span style={{ color: 'var(--danger)', fontWeight: 600 }}>
-                          ⚠️ Over budget by ${(spent - limit).toLocaleString(undefined, { minimumFractionDigits: 2 })}!
+                          ⚠️ Over budget by {currencySymbol}{(spent - limit).toLocaleString(undefined, { minimumFractionDigits: 2 })}!
                         </span>
                       )}
                       {isNearBudget && (
@@ -230,7 +232,7 @@ export const BudgetPlanner: React.FC<BudgetPlannerProps> = ({
                         type="number"
                         step="1"
                         min="1"
-                        placeholder="Limit ($)"
+                        placeholder={`Limit (${currencySymbol})`}
                         className="form-control"
                         style={{ flexGrow: 1, padding: '0.375rem 0.5rem', fontSize: '0.85rem' }}
                         value={budgetLimitInput}

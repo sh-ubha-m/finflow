@@ -6,6 +6,16 @@ import { TransactionList } from './components/TransactionList';
 import { TransactionForm } from './components/TransactionForm';
 import { BudgetPlanner } from './components/BudgetPlanner';
 
+// --- CURRENCY OPTIONS CONFIGURATION ---
+// List of supported currencies with their display symbols.
+const CURRENCIES = [
+  { code: 'USD', symbol: '$' },
+  { code: 'EUR', symbol: '€' },
+  { code: 'GBP', symbol: '£' },
+  { code: 'INR', symbol: '₹' },
+  { code: 'JPY', symbol: '¥' },
+];
+
 // --- DYNAMIC MOCK DATA GENERATOR ---
 // Generates records relative to the current system date so that the project 
 // looks visually complete immediately on first load.
@@ -91,7 +101,11 @@ export const App: React.FC = () => {
   const [transactions, setTransactions] = useLocalStorage<Transaction[]>('finance_transactions', []);
   const [budgets, setBudgets] = useLocalStorage<Budget[]>('finance_budgets', []);
   const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('finance_theme', 'dark');
+  const [currency, setCurrency] = useLocalStorage<string>('finance_currency', 'USD');
   
+  // Find the symbol corresponding to the chosen currency code (defaulting to $)
+  const currencySymbol = CURRENCIES.find((c) => c.code === currency)?.symbol || '$';
+
   // --- UI NAVIGATION & EDITING STATE ---
   const [activeTab, setActiveTab] = useState<'dashboard' | 'transactions' | 'budgets'>('dashboard');
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -269,6 +283,21 @@ export const App: React.FC = () => {
         </div>
 
         <div className="header-actions">
+          {/* Currency Dropdown Selector */}
+          <select
+            className="form-control"
+            style={{ width: '100px', padding: '0.375rem 0.5rem', fontSize: '0.85rem', fontWeight: 600 }}
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value)}
+            title="Change active currency"
+          >
+            {CURRENCIES.map((c) => (
+              <option key={c.code} value={c.code}>
+                {c.code} ({c.symbol})
+              </option>
+            ))}
+          </select>
+
           {/* Theme Toggle Button */}
           <button 
             className="btn btn-secondary btn-icon-only" 
@@ -359,12 +388,13 @@ export const App: React.FC = () => {
 
       {/* ACTIVE VIEW TAB CONTENT */}
       <div className="tab-view-content" style={{ minHeight: '400px' }}>
-        {activeTab === 'dashboard' && <Dashboard transactions={transactions} />}
+        {activeTab === 'dashboard' && <Dashboard transactions={transactions} currencySymbol={currencySymbol} />}
         {activeTab === 'transactions' && (
           <TransactionList
             transactions={transactions}
             onEdit={handleEditClick}
             onDelete={handleDeleteTransaction}
+            currencySymbol={currencySymbol}
           />
         )}
         {activeTab === 'budgets' && (
@@ -373,15 +403,12 @@ export const App: React.FC = () => {
             budgets={budgets}
             onSaveBudget={handleSaveBudget}
             onDeleteBudget={handleDeleteBudget}
+            currencySymbol={currencySymbol}
           />
         )}
       </div>
 
       {/* DIALOG TRANSACTION FORM MODAL */}
-      {/* 
-        Keying this component by the ID (or 'new') forces React to reconstruct the state 
-        whenever editing target changes. This cleans up state sync inside the modal completely!
-      */}
       {isFormOpen && (
         <TransactionForm
           key={editingTransaction ? editingTransaction.id : 'new'}
@@ -392,6 +419,7 @@ export const App: React.FC = () => {
           }}
           onSubmit={handleSaveTransaction}
           editingTransaction={editingTransaction}
+          currencySymbol={currencySymbol}
         />
       )}
     </main>

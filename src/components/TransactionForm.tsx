@@ -7,6 +7,7 @@ interface TransactionFormProps {
   onClose: () => void;
   onSubmit: (data: Omit<Transaction, 'id'>) => void;
   editingTransaction: Transaction | null;
+  currencySymbol: string;
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -14,6 +15,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   onClose,
   onSubmit,
   editingTransaction,
+  currencySymbol,
 }) => {
   // --- STATE INITIALIZATION ---
   // In standard React, if we key this component in the parent (e.g. key={editingTransaction?.id || 'new'}),
@@ -113,7 +115,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {/* Amount and Type Row */}
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="tx-amount">Amount ($)</label>
+                <label htmlFor="tx-amount">Amount ({currencySymbol})</label>
                 <input
                   id="tx-amount"
                   type="number"
